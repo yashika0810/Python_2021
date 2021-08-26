@@ -1,4 +1,4 @@
-a=10
+a=80
 b=20
 if a>b:
     print("A is greater")
