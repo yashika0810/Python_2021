@@ -2,6 +2,9 @@
 #SYntax- [left index : right index-1 : step size ]
 
 
+
+print("Added a new line")
+
 #for loop (Infinite loop)-
 
 #SYntax: for iteration_variable membership_operator(in/not in) sequence(list,string,array, dictionary):
