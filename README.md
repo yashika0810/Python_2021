@@ -1,31 +1,37 @@
+### Database sync script: 
 
-### SOPS_GPG Automation Script: 
+This section holds the instructions to run the `database.sh` script in order to pull and restore the database. You can find this script in `bin/database.sh` 
 
-This section holds the instructions to run the `sops_gpg.sh` script in order to set the secrets (add/replace) and encypt & decrypt the secrets. You can find this script in `bin/sops_gpg.sh`
+#### 1. Please make sure you configure AWS CLI and you have  [yq](https://github.com/mikefarah/yq) installed in your local.
 
-#### 1. Please make sure to configure AWS CLI
-#### 2. Configure the variable "GPG_URL" in which you need to provide the URL of the s3 bucket where GPG key is stored. You need to only provide it once. It will download the GPG_KEY.asc on your local. 
-#### 3. Configure the variable "SECRET_FILE" to the required secret file. The default is set to `secrets.staging.enc.yaml`
+#### 2. Pass this argument while running script
+       `gpg-path`: Pass s3 url `s3://infra...` or the `GPG_KEY.asc` file path on your local. 
 
-#### 4. There are three input parameters required to run the script -
+> NOTE: Please pass the s3 url in the gpg-path flag if GPG_FILE.asc does not exist on your local. Once it downloads the file in your local env, you can pass the file path. 
 
 
-* Command
-
-* Secret Key
-
-* Secret Value
-
-#### Example to run script :
+#### command:
 
 ```
-./sops_gpg.sh set-secret --key <key>  --value <value> 
+./bin/database.sh pull —-gpg-path <gpg_key_path/s3 url>
 
 ```
-The above command will the following oepration:
-* Decrypt the secrets
-* Adds/Replace key value to the secrets. If the key already exists, it will update the value to the same key
-* Encrypt the updated file
+
+#### example:
+``` 
+./bin/database.sh pull —-gpg-path GPG_KEY.asc 
+
+```
+> NOTE: The default env is set to production. You can change it to staging by changing the SECRET_FILE variable path to "secrets.staging.enc.yaml" in the script. 
+
+If you want to override your local username and password, it can be passed as env variable which is OPTIONAL.
+
+#### command:
+```
+LOCAL_USER=<username> PGPASSWORD=<local_password> LOCAL_DB=<db_name> ./bin/database.sh pull —-gpg-path <gpg_key_path/s3 url>
+
+```
 
 
-> NOTE: The decrypted secrets will be deleted once the encryption is performed.
+
+
